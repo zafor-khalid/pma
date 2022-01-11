@@ -6,6 +6,8 @@ import {
 import { useAuth } from './contex/AuthContext';
 import Dashborad from './pages/Dashborad';
 import Login from './pages/Login';
+
+
 function App() {
   const { currentUser } = useAuth()
   console.log(currentUser);
@@ -21,7 +23,7 @@ function App() {
           currentUser.length ?
             (
               <>
-                <Route path="/dashboard" element={<Dashborad />} />
+                <Route path="/dashboard/:id" element={<Dashborad />} />
                 <Route path="/login" element={<Dashborad />} />
               </>
             )

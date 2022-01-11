@@ -9,9 +9,9 @@ export default function LoginForm() {
         console.log('Success:', values);
         Login(values.username, values.password)
         if (localStorage.getItem('userName')) {
-            history("/dashboard")
+            history("/dashboard/1")
         }
-        history("/dashboard")
+        history("/dashboard/1")
 
     };
 

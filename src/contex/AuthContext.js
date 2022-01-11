@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
     const history = useNavigate()
     const [currentUser, setCurrentUser] = useState('')
     const [token, setToken] = useState('')
+    const [userId, setUserId] = useState(null)
 
     useEffect(() => {
 
@@ -41,6 +42,8 @@ export function AuthProvider({ children }) {
             const res2 = await axios.get(`http://127.0.0.1:8000/user/?username=${username}`, header)
             console.log(res2.data);
             localStorage.setItem("userName", res2.data[0].username)
+            localStorage.setItem("id", res2.data[0].id)
+
             setCurrentUser(res2.data[0].username)
         }
 

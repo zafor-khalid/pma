@@ -4,6 +4,11 @@ import SideBar from '../SideBar/SideBar.js';
 
 
 const PageLayout = ({ children }) => {
+
+  
+  
+
+
   return (
     <div>
       <NavBar />

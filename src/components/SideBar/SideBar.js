@@ -35,12 +35,12 @@ const Sidebar = () => {
         <div className='col-md-3'>
             <ul className='list-group sticky-top  py-2'>
 
-                {allProjects.length > 0 && allProjects.map((p, idx) => <NavLink key={idx} as='li' className='list-group-item' to='/' exact>
+                {allProjects.length > 0 && allProjects.map((p, idx) => <NavLink key={idx} as='li' className='list-group-item' to={`/dashboard/${p?.id}`} exact >
                     {p?.project_title}
                 </NavLink>)}
 
             </ul>
-        </div>
+        </div >
     );
 };
 
