@@ -1,6 +1,5 @@
 import 'antd/dist/antd.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useEffect } from 'react';
 import {
   Route, Routes
 } from "react-router-dom";
@@ -11,24 +10,30 @@ function App() {
   const { currentUser } = useAuth()
   console.log(currentUser);
   const user = localStorage.getItem('userName')
+  console.log(user.length);
+  console.log(user);
 
   return (
     <>
       <Routes>
+
         {
-          user ? (
-            <>
-              <Route path="/dashboard" element={<Dashborad />} />
-              <Route path="/" element={<Dashborad />} />
-            </>
-          )
-            : (
+          currentUser.length ?
+            (
+              <>
+                <Route path="/dashboard" element={<Dashborad />} />
+                <Route path="/login" element={<Dashborad />} />
+              </>
+            )
+            :
+            (
               <>
                 <Route path="/login" element={<Login />} />
               </>
             )
         }
-
+        <Route path="*" element={<>Page not found</>} />
+        <Route path="/out" element={<Login />} />
         {/* <Route path="/dashboard" element={<Dashborad />} />
         <Route path="/login" element={<Login />} /> */}
       </Routes>

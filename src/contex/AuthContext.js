@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const AuthContext = React.createContext()
 
@@ -8,7 +9,7 @@ export const useAuth = () => {
 }
 
 export function AuthProvider({ children }) {
-
+    const history = useNavigate()
     const [currentUser, setCurrentUser] = useState('')
     const [token, setToken] = useState('')
 
@@ -38,14 +39,16 @@ export function AuthProvider({ children }) {
         await localStorage.setItem("userToken", data)
         if (data) {
             const res2 = await axios.get(`http://127.0.0.1:8000/user/?username=${username}`, header)
-            // console.log(res2.data[0].username);
+            console.log(res2.data);
             localStorage.setItem("userName", res2.data[0].username)
+            setCurrentUser(res2.data[0].username)
         }
 
     }
     function Logout() {
         setCurrentUser('')
-        localStorage.setItem('userName', null)
+        localStorage.setItem('userName', '')
+        history("/login")
     }
 
     const value = {

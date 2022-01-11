@@ -1,59 +1,47 @@
-import {
-    AppstoreOutlined, ContainerOutlined, DesktopOutlined, MailOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PieChartOutlined
-} from '@ant-design/icons';
-import { Button, Menu } from 'antd';
-import React from 'react';
-const { SubMenu } = Menu;
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 
-export default class SideBar extends React.Component {
-    state = {
-        collapsed: false,
-    };
+const Sidebar = () => {
+    const [allProjects, setAllProjects] = useState([])
 
-    toggleCollapsed = () => {
-        this.setState({
-            collapsed: !this.state.collapsed,
-        });
-    };
+    useEffect(() => {
+        loadAllProjects()
+    }, [])
 
-    render() {
-        return (
-            <div style={{ width: 256 }}>
-                <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}>
-                    {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined)}
-                </Button>
-                <Menu
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    mode="inline"
-                    theme="dark"
-                    inlineCollapsed={this.state.collapsed}
-                >
-                    <Menu.Item key="1" icon={<PieChartOutlined />}>
-                        Option 1
-                    </Menu.Item>
-                    <Menu.Item key="2" icon={<DesktopOutlined />}>
-                        Option 2
-                    </Menu.Item>
-                    <Menu.Item key="3" icon={<ContainerOutlined />}>
-                        Option 3
-                    </Menu.Item>
-                    <SubMenu key="sub1" icon={<MailOutlined />} title="Navigation One">
-                        <Menu.Item key="5">Option 5</Menu.Item>
-                        <Menu.Item key="6">Option 6</Menu.Item>
-                        <Menu.Item key="7">Option 7</Menu.Item>
-                        <Menu.Item key="8">Option 8</Menu.Item>
-                    </SubMenu>
-                    <SubMenu key="sub2" icon={<AppstoreOutlined />} title="Navigation Two">
-                        <Menu.Item key="9">Option 9</Menu.Item>
-                        <Menu.Item key="10">Option 10</Menu.Item>
-                        <SubMenu key="sub3" title="Submenu">
-                            <Menu.Item key="11">Option 11</Menu.Item>
-                            <Menu.Item key="12">Option 12</Menu.Item>
-                        </SubMenu>
-                    </SubMenu>
-                </Menu>
-            </div>
-        );
+    const loadAllProjects = async () => {
+
+        const token = localStorage.getItem('userToken')
+        console.log(token)
+        try {
+            const res = await axios.get('http://127.0.0.1:8000/project/', {
+                heraders: {
+                    "Content-Type": "application/json",
+                }
+            })
+            console.log(res)
+            if (res.status === 200) {
+                setAllProjects(res.data)
+            }
+        } catch (error) {
+
+        }
+
     }
-}
+    console.log(allProjects)
+
+
+    return (
+        <div className='col-md-3'>
+            <ul className='list-group sticky-top  py-2'>
+
+                {allProjects.length > 0 && allProjects.map((p, idx) => <NavLink key={idx} as='li' className='list-group-item' to='/' exact>
+                    {p?.project_title}
+                </NavLink>)}
+
+            </ul>
+        </div>
+    );
+};
+
+export default Sidebar;

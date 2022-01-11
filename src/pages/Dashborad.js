@@ -1,15 +1,22 @@
 import React from 'react';
-import NavBar from '../components/NavBar/NavBar';
-import SideBar from '../components/SideBar/SideBar';
+import PageLayout from '../components/Layout/Layout';
 
 const Dashborad = () => {
     return (
-        <>
+        <PageLayout>
 
-            <NavBar />
-            <SideBar />
+            <div>
+                <div>
+                    <h4>name</h4>
+                    <h4>type</h4>
+                    <h4>duration</h4>
+                    <h4> status</h4>
+                </div>
 
-        </>
+
+            </div>
+
+        </PageLayout>
     );
 }
 
