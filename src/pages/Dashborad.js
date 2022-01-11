@@ -44,7 +44,7 @@ const Dashborad = () => {
         const token = localStorage.getItem('userToken')
         console.log(newTask);
         try {
-            const res = await axios.post('http://127.0.0.1:8000/task/', newTask, {
+            const res = await axios.post(`http://127.0.0.1:8000/task/?project_id=${id}`, newTask, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -103,8 +103,10 @@ const Dashborad = () => {
         console.log(task_status, task)
         const token = localStorage.getItem('userToken')
         console.log(token);
+        const pid = parseInt(id)
+        const tid = parseInt(task.id)
         try {
-            const res = await axios.put(`http://127.0.0.1:8000/task/${task.id}/`, { ...task, task_status: task_status }, {
+            const res = await axios.put(`http://127.0.0.1:8000/update_task/?project_id=${pid}&${tid}`, { ...task, task_status: task_status }, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
