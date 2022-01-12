@@ -22,7 +22,7 @@ export default function NavBar() {
                         navbar
                     >
                         <NavItem>
-                            <NavLink href="/components/">
+                            <NavLink href="#/">
                                 {/* <AiFillNotification /> */}
                                 <span className='text-light'>Notification</span>
                             </NavLink>
