@@ -43,7 +43,7 @@ export default function CreateNewProjectForm() {
 
             </Form>
             <Button className='ms-3' variant="success" type="submit" onClick={postProject}>
-                Create New Task
+                Create New Project
             </Button>
         </>
     )

@@ -15,6 +15,7 @@ const Dashborad = () => {
         task_status: ''
     })
     const [tasks, setTasks] = useState([])
+    const [user, setUser] = useState()
 
     const { id } = useParams()
     useEffect(() => {
@@ -22,6 +23,25 @@ const Dashborad = () => {
     }, [])
 
     const [developers, setDevelopers] = useState([])
+
+    const token = localStorage.getItem('userToken')
+    async function findUser(devid) {
+        try {
+            const res2 = await axios.get(`http://127.0.0.1:8000/user/${devid}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            // console.log(res2.data.username);
+            await setUser(res2.data.username)
+            // return await res2.data.username
+
+        } catch (error) {
+
+        }
+    }
+
+
 
     useEffect(() => {
         loadAllDevelopers()
@@ -54,7 +74,7 @@ const Dashborad = () => {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            // console.log(res)
+            console.log(res)
 
             if (res.status === 201) {
                 alert('Task created!')
@@ -190,11 +210,11 @@ const Dashborad = () => {
                 {tasks.length > 0 && tasks.map((task, idx) =>
                     <div key={idx} className='bg-light justify-content-between align-items-center w-100' style={{ display: 'flex', padding: '1rem', margin: '.5rem' }}>
                         <h4 className='mx-2'>{task?.task}</h4>
-                        <h4 className='mx-2'>{task?.developer}</h4>
+                        <h4 className='mx-2'>{findUser(task?.developer) && user}</h4>
                         {/* <h4 className='mx-2'>{task?.project_title}</h4> */}
                         <h4 className='mx-2'>{task?.task_type}</h4>
 
-                        <Form.Select aria-label="Default select example"
+                        <Form.Select aria-label="Default select example" className='w-25'
                             onChange={(e) => updateTask(e.target.value, task)}
                         >
                             <option value="To Do" selected={task.task_status === 'To Do'} >To Do</option>

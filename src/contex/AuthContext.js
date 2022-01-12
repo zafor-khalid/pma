@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState('')
     const [token, setToken] = useState('')
     const [userId, setUserId] = useState(null)
+    const [users, setUsers] = useState()
 
     useEffect(() => {
 
@@ -22,6 +23,7 @@ export function AuthProvider({ children }) {
         if (localStorage.getItem('userName')) {
             setCurrentUser(localStorage.getItem('userName'))
         }
+
 
     }, [])
     async function Login(username, password) {
@@ -34,24 +36,49 @@ export function AuthProvider({ children }) {
                 "Content-Type": "application/json",
             }
         }
-        const res = await axios.post('http://127.0.0.1:8000/api/token/', authBody, header)
-        // console.log(res);
-        const data = await res.data.access
-        await localStorage.setItem("userToken", data)
-        if (data) {
-            const res2 = await axios.get(`http://127.0.0.1:8000/user/?username=${username}`, {
+        try {
+            const res = await axios.post('http://127.0.0.1:8000/api/token/', authBody, header)
+            // console.log(res);
+            const data = await res.data.access
+            await localStorage.setItem("userToken", data)
+            if (data) {
+                try {
+                    const res2 = await axios.get(`http://127.0.0.1:8000/user/?username=${username}`, {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    })
+                    localStorage.setItem("userName", res2.data[0].username)
+                    localStorage.setItem("id", res2.data[0].id)
+                    setUserId(res2.data[0].id)
+                    setCurrentUser(res2.data[0].username)
+                } catch (error) {
+
+                }
+                // console.log(res2.data);
+
+            }
+        } catch (error) {
+
+        }
+
+
+    }
+    async function UserInfo(token) {
+        try {
+            const res2 = await axios.get(`http://127.0.0.1:8000/user/`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            // console.log(res2.data);
-            localStorage.setItem("userName", res2.data[0].username)
-            localStorage.setItem("id", res2.data[0].id)
+            // console.log(res2);
+            setUsers(res2.data)
 
-            setCurrentUser(res2.data[0].username)
+        } catch (error) {
+            console.log(error);
         }
-
     }
+    // UserInfo()
     function Logout() {
         setCurrentUser('')
         localStorage.setItem('userName', '')
@@ -63,7 +90,9 @@ export function AuthProvider({ children }) {
         token,
         currentUser,
         Logout,
-        userId
+        userId,
+        users,
+        UserInfo
     }
 
     return (
