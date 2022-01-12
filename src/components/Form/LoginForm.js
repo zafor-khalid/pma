@@ -6,7 +6,7 @@ export default function LoginForm() {
     const { Login } = useAuth();
     const history = useNavigate()
     const onFinish = (values) => {
-        console.log('Success:', values);
+        // console.log('Success:', values);
         Login(values.username, values.password)
         if (localStorage.getItem('userName')) {
             history("/dashboard/1")

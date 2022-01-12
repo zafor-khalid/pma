@@ -30,8 +30,13 @@ const Dashborad = () => {
 
     const loadAllDevelopers = async () => {
         try {
-            const res = await axios.get('http://127.0.0.1:8000/user')
-            console.log(res)
+            const token = localStorage.getItem('userToken')
+            const res = await axios.get('http://127.0.0.1:8000/user', {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            // console.log(res)
             if (res.status === 200) {
                 setDevelopers(res.data)
             }
@@ -42,14 +47,14 @@ const Dashborad = () => {
 
     const postTask = async () => {
         const token = localStorage.getItem('userToken')
-        console.log(newTask);
+        // console.log(newTask);
         try {
             const res = await axios.post(`http://127.0.0.1:8000/task/?project_id=${id}`, newTask, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            console.log(res)
+            // console.log(res)
 
             if (res.status === 201) {
                 alert('Task created!')
@@ -73,16 +78,16 @@ const Dashborad = () => {
 
     const getTask = async () => {
         const token = localStorage.getItem('userToken')
-        console.log(token);
+        // console.log(token);
         const pid = parseInt(id)
-        console.log(`http://127.0.0.1:8000/task/?project_id=${pid}/`);
+        // console.log(`http://127.0.0.1:8000/task/?project_id=${pid}/`);
         try {
             const res = await axios.get(`http://127.0.0.1:8000/task/?project_id=${pid}`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            console.log(res)
+            // console.log(res)
 
             if (res.status === 200) {
                 const tempArr = []
@@ -100,7 +105,7 @@ const Dashborad = () => {
 
 
     const updateTask = async (task_status, task) => {
-        console.log(task_status, task)
+        // console.log(task_status, task)
         const token = localStorage.getItem('userToken')
         console.log(token);
         const pid = parseInt(id)
@@ -111,7 +116,7 @@ const Dashborad = () => {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            console.log(res)
+            // console.log(res)
 
             if (res.status === 200) {
                 alert('Task updated!')
@@ -161,7 +166,7 @@ const Dashborad = () => {
                             <Form.Label>Task Type</Form.Label>
                             <Form.Select aria-label="Default select example" onChange={(e) => {
                                 setNewTask({ ...newTask, task_type: e.target.value })
-                                console.log(e)
+                                // console.log(e)
                             }
                             }>
                                 <option value="Bug">Bug</option>

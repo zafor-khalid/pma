@@ -39,8 +39,12 @@ export function AuthProvider({ children }) {
         const data = await res.data.access
         await localStorage.setItem("userToken", data)
         if (data) {
-            const res2 = await axios.get(`http://127.0.0.1:8000/user/?username=${username}`, header)
-            console.log(res2.data);
+            const res2 = await axios.get(`http://127.0.0.1:8000/user/?username=${username}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            // console.log(res2.data);
             localStorage.setItem("userName", res2.data[0].username)
             localStorage.setItem("id", res2.data[0].id)
 
@@ -59,6 +63,7 @@ export function AuthProvider({ children }) {
         token,
         currentUser,
         Logout,
+        userId
     }
 
     return (

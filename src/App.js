@@ -4,16 +4,16 @@ import {
   Route, Routes
 } from "react-router-dom";
 import { useAuth } from './contex/AuthContext';
+import CreateNewProject from './pages/CreateNewProject';
 import Dashborad from './pages/Dashborad';
 import Login from './pages/Login';
 
 
 function App() {
   const { currentUser } = useAuth()
-  console.log(currentUser);
-  const user = localStorage.getItem('userName')
-  console.log(user.length);
-  console.log(user);
+  // console.log(currentUser);
+  // const user = localStorage.getItem('userName')
+
 
   return (
     <>
@@ -24,7 +24,8 @@ function App() {
             (
               <>
                 <Route path="/dashboard/:id" element={<Dashborad />} />
-                <Route path="/login" element={<Dashborad />} />
+                <Route path="/" element={<Dashborad />} />
+                <Route path="/create" element={<CreateNewProject />} />
               </>
             )
             :

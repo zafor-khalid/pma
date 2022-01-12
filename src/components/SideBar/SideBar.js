@@ -12,14 +12,14 @@ const Sidebar = () => {
     const loadAllProjects = async () => {
 
         const token = localStorage.getItem('userToken')
-        console.log(token)
+        // console.log(token)
         try {
             const res = await axios.get('http://127.0.0.1:8000/project/', {
-                heraders: {
-                    "Content-Type": "application/json",
+                headers: {
+                    "Authorization": `Bearer ${token}`
                 }
             })
-            console.log(res)
+            // console.log(res)
             if (res.status === 200) {
                 setAllProjects(res.data)
             }
@@ -28,7 +28,7 @@ const Sidebar = () => {
         }
 
     }
-    console.log(allProjects)
+    // console.log(allProjects)
 
 
     return (
