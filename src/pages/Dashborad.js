@@ -107,11 +107,11 @@ const Dashborad = () => {
     const updateTask = async (task_status, task) => {
         // console.log(task_status, task)
         const token = localStorage.getItem('userToken')
-        console.log(token);
-        const pid = parseInt(id)
+        // console.log(token);
+        // const pid = parseInt(id)
         const tid = parseInt(task.id)
         try {
-            const res = await axios.put(`http://127.0.0.1:8000/update_task/?project_id=${pid}&${tid}`, { ...task, task_status: task_status }, {
+            const res = await axios.put(`http://127.0.0.1:8000/task/${tid}/`, { ...task, task_status: task_status }, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
@@ -129,8 +129,6 @@ const Dashborad = () => {
 
 
 
-
-
     // console.log(newTask)
 
     return (
@@ -143,7 +141,6 @@ const Dashborad = () => {
                         <Form.Group className="m-3" controlId="formBasicEmail">
                             <Form.Label>Task</Form.Label>
                             <Form.Control type="text" placeholder="Task name" onChange={(e) => setNewTask({ ...newTask, task: e.target.value })} />
-
                         </Form.Group>
 
                         <Form.Group className="m-3" >
@@ -194,15 +191,15 @@ const Dashborad = () => {
                     <div key={idx} className='bg-light justify-content-between align-items-center w-100' style={{ display: 'flex', padding: '1rem', margin: '.5rem' }}>
                         <h4 className='mx-2'>{task?.task}</h4>
                         <h4 className='mx-2'>{task?.developer}</h4>
-                        <h4 className='mx-2'>{task?.project_title}</h4>
+                        {/* <h4 className='mx-2'>{task?.project_title}</h4> */}
                         <h4 className='mx-2'>{task?.task_type}</h4>
 
                         <Form.Select aria-label="Default select example"
                             onChange={(e) => updateTask(e.target.value, task)}
                         >
-                            <option value="Bug" selected={task.task_status === 'Bug'} >To Do</option>
-                            <option value="Design" selected={task.task_status === 'On Going'}  >On Going</option>
-                            <option value="Design" selected={task.task_status === 'Finished'}  >Finished</option>
+                            <option value="To Do" selected={task.task_status === 'To Do'} >To Do</option>
+                            <option value="On Going" selected={task.task_status === 'On Going'}  >On Going</option>
+                            <option value="Finished" selected={task.task_status === 'Finished'}  >Finished</option>
                         </Form.Select>
                         {/* // <Dropdown align='start'>
                     //     <Dropdown.Toggle variant="success" id="dropdown-basic">
