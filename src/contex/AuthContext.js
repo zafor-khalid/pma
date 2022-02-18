@@ -71,7 +71,7 @@ export function AuthProvider({ children }) {
                     "Authorization": `Bearer ${token}`
                 }
             })
-            // console.log(res2);
+            console.log(res2);
             setUsers(res2.data)
 
         } catch (error) {

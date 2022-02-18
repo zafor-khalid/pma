@@ -34,7 +34,7 @@ export default function NavBar() {
                             </NavLink>
                         </NavItem>
                         <NavItem>
-                            <button className='btn btn-danger' onClick={Logout}>
+                            <button className='btn btn-light' onClick={Logout}>
                                 Logout
                             </button>
                         </NavItem>

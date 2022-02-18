@@ -203,24 +203,35 @@ const Dashborad = () => {
 
 
                     </Form>
-                    <Button className='ms-3' variant="success" type="submit" onClick={() => postTask()}>
+                    <Button className='ms-3' variant="primary" type="submit" onClick={() => postTask()}>
                         Submit
                     </Button>
                 </div>
+                {/* <table>
+                    <tr>
+                        <th>Sl</th>
+                        <th>Task Name</th>
+                        <th>Developer Name</th>
+                        <th>Sl</th>
+                        <th>Sl</th>
+                    </tr>
+                </table> */}
                 {tasks.length > 0 && tasks.map((task, idx) =>
                     <div key={idx} className='bg-light justify-content-between align-items-center w-100' style={{ display: 'flex', padding: '1rem', margin: '.5rem' }}>
-                        <h4 className='mx-2'>{task?.task}</h4>
-                        <h4 className='mx-2'>{findUser(task?.developer) && user}</h4>
+                        <div>{idx === 0 && <><h4 className='text-primary mb-3'>SL</h4></>}<h4 className='mx-2'>{idx + 1} .</h4></div>
+                        <div>{idx === 0 && <h4 className='text-primary mb-3'>Task</h4>}<h4 className='mx-2'>{task?.task}</h4></div>
+                        <div>{idx === 0 && <h4 className='text-primary mb-3'>Developer</h4>}<h4 className='mx-2'>{findUser(task?.developer) && user}</h4></div>
                         {/* <h4 className='mx-2'>{task?.project_title}</h4> */}
-                        <h4 className='mx-2'>{task?.task_type}</h4>
+                        <div>{idx === 0 && <h4 className='text-primary mb-3'>Task Type</h4>}<h4 className='mx-2'>{task?.task_type}</h4></div>
 
-                        <Form.Select aria-label="Default select example" className='w-25'
+                        <div>{idx === 0 && <h4 className='text-primary mb-3'>Status</h4>}<Form.Select aria-label="Default select example" className='w-100'
                             onChange={(e) => updateTask(e.target.value, task)}
                         >
                             <option value="To Do" selected={task.task_status === 'To Do'} >To Do</option>
                             <option value="On Going" selected={task.task_status === 'On Going'}  >On Going</option>
                             <option value="Finished" selected={task.task_status === 'Finished'}  >Finished</option>
                         </Form.Select>
+                        </div>
                         {/* // <Dropdown align='start'>
                     //     <Dropdown.Toggle variant="success" id="dropdown-basic">
                     //         Status

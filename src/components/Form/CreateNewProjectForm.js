@@ -16,6 +16,9 @@ export default function CreateNewProjectForm() {
                 }
             })
             console.log(res);
+            if (res.status === 201) {
+                alert("Project Created")
+            }
         } catch (error) {
             console.log(error);
         }
