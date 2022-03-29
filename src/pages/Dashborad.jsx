@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 import PageLayout from '../components/Layout/Layout'
 import { useAuth } from '../contex/AuthContext'
 import Toast from '../Utils/Toast'
+import { Popconfirm } from 'antd'
 
 const Dashborad = () => {
   const auth = useAuth()
@@ -141,23 +142,31 @@ const Dashborad = () => {
     } catch (error) {}
   }
 
-  const updateTask = async (task_status, task) => {
+  const updateTask = async (task_status, task, type) => {
     const token = localStorage.getItem('userToken')
-    // const pid = parseInt(id)
-    const tid = parseInt(task.id)
-    try {
-      const res = await axios.put(
-        `http://127.0.0.1:8000/task/${tid}/`,
-        { ...task, task_status: task_status },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
 
-      if (res.status === 200) {
-        Toast('success', 'Task updated successfully')
+    const tid = parseInt(task.id)
+
+    try {
+      let res
+      type === 'Update'
+        ? (res = await axios.put(
+            `http://127.0.0.1:8000/task/${tid}/`,
+            { ...task, task_status: task_status },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          ))
+        : (res = await axios.delete(`http://127.0.0.1:8000/task/${tid}/`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }))
+
+      if (res.status === 200 || res.status === 204) {
+        Toast('success', `Task ${type}d successfully`)
         getTask()
       }
     } catch (error) {
@@ -169,12 +178,14 @@ const Dashborad = () => {
     <PageLayout>
       <div className='w-100 my-2'>
         <Tabs
-          defaultActiveKey='Create'
+          defaultActiveKey={
+            auth?.currentUserInfo?.is_superuser ? 'Create' : 'Design'
+          }
           id='uncontrolled-tab-example'
           className='mb-3'
         >
-          <Tab eventKey='Create' title='Create Task'>
-            {auth?.currentUserInfo?.is_superuser && (
+          {auth?.currentUserInfo?.is_superuser && (
+            <Tab eventKey='Create' title='Create Task'>
               <div
                 className='px-2 pt-5 pb-3 my-5 bg-light '
                 style={{
@@ -288,8 +299,9 @@ const Dashborad = () => {
                   )}
                 </Button>
               </div>
-            )}
-          </Tab>
+              )
+            </Tab>
+          )}
           <Tab eventKey='Design' title='Design'>
             <Table
               striped
@@ -298,7 +310,11 @@ const Dashborad = () => {
               hover
               className='my-5 text-center'
             >
-              {tasks.filter((f) => f?.task_type === 'Design').length > 0 && (
+              {tasks.filter((f) =>
+                auth?.currentUserInfo?.is_superuser
+                  ? f?.task_type === 'Design'
+                  : f?.task_type === 'Design' && f?.developer === auth?.userId
+              ).length > 0 && (
                 <thead>
                   <tr>
                     <th>#</th>
@@ -307,13 +323,23 @@ const Dashborad = () => {
                     <th>Type</th>
                     <th>Deadline</th>
                     <th>Status</th>
+                    {auth?.currentUserInfo?.is_superuser && <th>Action</th>}
                   </tr>
                 </thead>
               )}
               <tbody>
-                {tasks.filter((f) => f?.task_type === 'Design').length > 0 ? (
+                {tasks.filter((f) =>
+                  auth?.currentUserInfo?.is_superuser
+                    ? f?.task_type === 'Design'
+                    : f?.task_type === 'Design' && f?.developer === auth?.userId
+                ).length > 0 ? (
                   tasks
-                    .filter((f) => f?.task_type === 'Design')
+                    .filter((f) =>
+                      auth?.currentUserInfo?.is_superuser
+                        ? f?.task_type === 'Design'
+                        : f?.task_type === 'Design' &&
+                          f?.developer === auth?.userId
+                    )
                     .map((task, idx) => (
                       <tr key={idx}>
                         <td>{idx + 1}</td>
@@ -343,7 +369,9 @@ const Dashborad = () => {
                                 : 'text-success'
                             }
                             style={{ fontWeight: '500' }}
-                            onChange={(e) => updateTask(e.target.value, task)}
+                            onChange={(e) =>
+                              updateTask(e.target.value, task, 'Update')
+                            }
                           >
                             <option
                               selected={task.task_status === 'Todo'}
@@ -368,6 +396,25 @@ const Dashborad = () => {
                             </option>
                           </Form.Select>
                         </td>
+                        {auth?.currentUserInfo?.is_superuser && (
+                          <td>
+                            <Popconfirm
+                              title='Are you sure to delete this task?'
+                              onConfirm={() => updateTask('', task, 'Delete')}
+                              placement='left'
+                              okText='Yes'
+                              cancelText='No'
+                            >
+                              <Button
+                                variant='danger'
+                                className='fw-bold'
+                                size='sm'
+                              >
+                                Delete
+                              </Button>{' '}
+                            </Popconfirm>
+                          </td>
+                        )}
                       </tr>
                     ))
                 ) : (
@@ -386,8 +433,12 @@ const Dashborad = () => {
               hover
               className='my-5 text-center'
             >
-              {tasks.filter((f) => f?.task_type === 'Development').length >
-                0 && (
+              {tasks.filter((f) =>
+                auth?.currentUserInfo?.is_superuser
+                  ? f?.task_type === 'Development'
+                  : f?.task_type === 'Development' &&
+                    f?.developer === auth?.userId
+              ).length > 0 && (
                 <thead>
                   <tr>
                     <th>#</th>
@@ -396,14 +447,26 @@ const Dashborad = () => {
                     <th>Type</th>
                     <th>Deadline</th>
                     <th>Status</th>
+                    {auth?.currentUserInfo?.is_superuser && (
+                      <th>Action</th>
+                    )}{' '}
                   </tr>
                 </thead>
               )}
               <tbody>
-                {tasks.filter((f) => f?.task_type === 'Development').length >
-                0 ? (
+                {tasks.filter((f) =>
+                  auth?.currentUserInfo?.is_superuser
+                    ? f?.task_type === 'Development'
+                    : f?.task_type === 'Development' &&
+                      f?.developer === auth?.userId
+                ).length > 0 ? (
                   tasks
-                    .filter((f) => f?.task_type === 'Development')
+                    .filter((f) =>
+                      auth?.currentUserInfo?.is_superuser
+                        ? f?.task_type === 'Development'
+                        : f?.task_type === 'Development' &&
+                          f?.developer === auth?.userId
+                    )
                     .map((task, idx) => (
                       <tr key={idx}>
                         <td>{idx + 1}</td>
@@ -433,7 +496,9 @@ const Dashborad = () => {
                                 : 'text-success'
                             }
                             style={{ fontWeight: '500' }}
-                            onChange={(e) => updateTask(e.target.value, task)}
+                            onChange={(e) =>
+                              updateTask(e.target.value, task, 'Update')
+                            }
                           >
                             <option
                               selected={
@@ -464,6 +529,25 @@ const Dashborad = () => {
                             </option>
                           </Form.Select>
                         </td>
+                        {auth?.currentUserInfo?.is_superuser && (
+                          <td>
+                            <Popconfirm
+                              title='Are you sure to delete this task?'
+                              onConfirm={() => updateTask('', task, 'Delete')}
+                              placement='left'
+                              okText='Yes'
+                              cancelText='No'
+                            >
+                              <Button
+                                variant='danger'
+                                className='fw-bold'
+                                size='sm'
+                              >
+                                Delete
+                              </Button>{' '}
+                            </Popconfirm>
+                          </td>
+                        )}
                       </tr>
                     ))
                 ) : (
@@ -482,7 +566,11 @@ const Dashborad = () => {
               hover
               className='my-5 text-center'
             >
-              {tasks.filter((f) => f?.task_type === 'Bug').length > 0 && (
+              {tasks.filter((f) =>
+                auth?.currentUserInfo?.is_superuser
+                  ? f?.task_type === 'Bug'
+                  : f?.task_type === 'Bug' && f?.developer === auth?.userId
+              ).length > 0 && (
                 <thead>
                   <tr>
                     <th>#</th>
@@ -491,13 +579,25 @@ const Dashborad = () => {
                     <th>Type</th>
                     <th>Deadline</th>
                     <th>Status</th>
+                    {auth?.currentUserInfo?.is_superuser && (
+                      <th>Action</th>
+                    )}{' '}
                   </tr>
                 </thead>
               )}
               <tbody>
-                {tasks.filter((f) => f?.task_type === 'Bug').length > 0 ? (
+                {tasks.filter((f) =>
+                  auth?.currentUserInfo?.is_superuser
+                    ? f?.task_type === 'Bug'
+                    : f?.task_type === 'Bug' && f?.developer === auth?.userId
+                ).length > 0 ? (
                   tasks
-                    .filter((f) => f?.task_type === 'Bug')
+                    .filter((f) =>
+                      auth?.currentUserInfo?.is_superuser
+                        ? f?.task_type === 'Bug'
+                        : f?.task_type === 'Bug' &&
+                          f?.developer === auth?.userId
+                    )
                     .map((task, idx) => (
                       <tr key={idx}>
                         <td>{idx + 1}</td>
@@ -527,7 +627,9 @@ const Dashborad = () => {
                                 : 'text-success'
                             }
                             style={{ fontWeight: '500' }}
-                            onChange={(e) => updateTask(e.target.value, task)}
+                            onChange={(e) =>
+                              updateTask(e.target.value, task, 'Update')
+                            }
                           >
                             <option
                               selected={
@@ -558,6 +660,25 @@ const Dashborad = () => {
                             </option>
                           </Form.Select>
                         </td>
+                        {auth?.currentUserInfo?.is_superuser && (
+                          <td>
+                            <Popconfirm
+                              title='Are you sure to delete this task?'
+                              onConfirm={() => updateTask('', task, 'Delete')}
+                              placement='left'
+                              okText='Yes'
+                              cancelText='No'
+                            >
+                              <Button
+                                variant='danger'
+                                className='fw-bold'
+                                size='sm'
+                              >
+                                Delete
+                              </Button>{' '}
+                            </Popconfirm>
+                          </td>
+                        )}
                       </tr>
                     ))
                 ) : (

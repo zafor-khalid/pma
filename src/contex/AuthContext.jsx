@@ -18,11 +18,13 @@ export function AuthProvider({ children }) {
   const [currentUserInfo, setCurrentUserInfo] = useState({})
 
   useEffect(() => {
-    if (localStorage.getItem('userToken')) {
-      setToken(localStorage.getItem('userToken'))
-    }
-    if (localStorage.getItem('userName')) {
-      setCurrentUser(localStorage.getItem('userName'))
+    let token = localStorage.getItem('userToken')
+    let username = localStorage.getItem('userName')
+    if (token && username) {
+      setToken(token)
+      setCurrentUser(username)
+
+      loggedInUserInfo(token, username)
     }
   }, [])
   async function Login(username, password) {
@@ -42,37 +44,40 @@ export function AuthProvider({ children }) {
         header
       )
       if (res.status === 200) {
+        const data = await res.data.access
+        localStorage.setItem('userToken', data)
+        loggedInUserInfo(data, username)
         Toast('success', 'Successfully logged in!')
       } else throw new Error(res?.data?.detail)
-
-      const data = await res.data.access
-      await localStorage.setItem('userToken', data)
-
-      if (data) {
-        try {
-          const res2 = await axios.get(
-            `http://127.0.0.1:8000/user/?username=${username}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          localStorage.setItem('userName', res2.data[0].username)
-          localStorage.setItem('id', res2.data[0].id)
-          setUserId(res2.data[0].id)
-          setCurrentUser(res2.data[0].username)
-          setCurrentUserInfo(res2?.data[0])
-        } catch (error) {
-          Toast('err', error || 'Something went wrong')
-        }
-
-        history('/dashboard/1')
-      }
     } catch (error) {
       Toast('err', error.response?.data?.detail || 'Something went wrong')
     }
   }
+
+  const loggedInUserInfo = async (token, username) => {
+    try {
+      const res2 = await axios.get(
+        `http://127.0.0.1:8000/user/?username=${username}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      if (res2.status === 200) {
+        setCurrentUserInfo(res2?.data[0])
+        localStorage.setItem('userName', res2.data[0].username)
+        localStorage.setItem('id', res2.data[0].id)
+        setUserId(res2.data[0].id)
+        setCurrentUser(res2.data[0].username)
+        history('/dashboard/1')
+      } else throw new Error(res2?.data?.detail)
+    } catch (error) {
+      Toast('err', error || 'Something went wrong')
+    }
+  }
+
   async function UserInfo() {
     try {
       const res2 = await axios.get(`http://127.0.0.1:8000/user/`, {
@@ -88,6 +93,9 @@ export function AuthProvider({ children }) {
   function Logout() {
     setCurrentUser('')
     localStorage.removeItem('userName')
+    localStorage.removeItem('userToken')
+    localStorage.removeItem('id')
+
     history('/login')
   }
 
