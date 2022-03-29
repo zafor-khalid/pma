@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
+import Toast from '../../Utils/Toast'
 
 export default function CreateNewProjectForm() {
   const [project, setProject] = useState({
@@ -18,14 +19,30 @@ export default function CreateNewProjectForm() {
 
       if (res.status === 201) {
         alert('Project Created')
+        Toast('success', 'Project created successfully!')
       }
-    } catch (error) {}
+    } catch (error) {
+      Toast(
+        'err',
+        error?.response?.data?.details ||
+          'Something went wrong, try again later'
+      )
+    }
   }
   return (
-    <>
+    <div
+      className='mx-auto p-5 my-5'
+      style={{
+        maxWidth: '40rem',
+        // boxShadow: '0px 0px 12px rgba(0, 0, 0, 0.25)',
+        borderRadius: '4px',
+      }}
+    >
+      <h3 className='mb-5'>Create New Project</h3>
+
       <Form className='d-flex justify-content-center flex-column m-0 p-0'>
         <div>
-          <Form.Group className='m-3' controlId='formBasicEmail'>
+          <Form.Group className='mb-3' controlId='formBasicEmail'>
             <Form.Label>Project Title</Form.Label>
             <Form.Control
               type='text'
@@ -40,7 +57,7 @@ export default function CreateNewProjectForm() {
           </Form.Group>
         </div>
         <div>
-          <Form.Group className='m-3' controlId='formBasicEmail'>
+          <Form.Group className='mb-2' controlId='formBasicEmail'>
             <Form.Label>Project Description</Form.Label>
             <Form.Control
               type='text'
@@ -56,13 +73,13 @@ export default function CreateNewProjectForm() {
         </div>
       </Form>
       <Button
-        className='ms-3'
-        variant='success'
+        className='my-4 w-100 fw-bold'
+        variant='primary'
         type='submit'
         onClick={postProject}
       >
         Create New Project
       </Button>
-    </>
+    </div>
   )
 }

@@ -167,7 +167,7 @@ const Dashborad = () => {
 
   return (
     <PageLayout>
-      <div className='w-100'>
+      <div className='w-100 my-2'>
         <Tabs
           defaultActiveKey='Create'
           id='uncontrolled-tab-example'
