@@ -4,7 +4,8 @@ import React from 'react';
 import { Collapse, Nav, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { useAuth } from '../../contex/AuthContext';
 export default function NavBar() {
-    const { Logout } = useAuth()
+    const { Logout, currentUserInfo } = useAuth()
+
     return (
         <>
             <Navbar
@@ -21,18 +22,17 @@ export default function NavBar() {
                         className="ms-auto"
                         navbar
                     >
-                        <NavItem>
+                        {/* <NavItem>
                             <NavLink href="#/">
-                                {/* <AiFillNotification /> */}
                                 <span className='text-light'>Notification</span>
                             </NavLink>
-                        </NavItem>
-                        <NavItem>
+                        </NavItem> */}
+                        {currentUserInfo?.is_superuser && <NavItem>
                             <NavLink href="/create/">
                                 {/* <AiFillNotification /> */}
                                 <span className='text-light'>Create New Project</span>
                             </NavLink>
-                        </NavItem>
+                        </NavItem>}
                         <NavItem>
                             <button className='btn btn-light' onClick={Logout}>
                                 Logout

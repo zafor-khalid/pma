@@ -1,43 +1,38 @@
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contex/AuthContext';
+import Toast from '../../Utils/Toast';
 
 export default function LoginForm() {
     const { Login } = useAuth();
     const history = useNavigate()
     const onFinish = (values) => {
-        // console.log('Success:', values);
+
         Login(values.username, values.password)
-        if (localStorage.getItem('userName')) {
-            history("/dashboard/1")
-        }
-        history("/dashboard/1")
+        // if (localStorage.getItem('userName')) {
+        //     history("/dashboard/1")
+        // }
+        // history("/dashboard/1")
 
     };
 
     const onFinishFailed = (errorInfo) => {
-        console.log('Failed:', errorInfo);
+        Toast('err', errorInfo || 'Something went wrong1')
     };
 
     return (
         <Form
             name="basic"
-            labelCol={{
-                span: 0,
-            }}
-            wrapperCol={{
-                span: 24,
-            }}
-            initialValues={{
-                remember: true,
-            }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
-            autoComplete="off"
+            autoComplete="on"
+            layout="vertical"
         >
             <Form.Item
                 label="Username"
                 name="username"
+                labelAlign='right'
+
                 rules={[
                     {
                         required: true,
@@ -61,24 +56,8 @@ export default function LoginForm() {
                 <Input.Password />
             </Form.Item>
 
-            <Form.Item
-                name="remember"
-                valuePropName="checked"
-                wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                }}
-            >
-                <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
-            <Form.Item
-                wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                }}
-            >
-                <Button type="primary" htmlType="submit">
+            <Form.Item className="text-center">
+                <Button htmlType="submit" type='primary' className="w-100 " >
                     Login
                 </Button>
             </Form.Item>
