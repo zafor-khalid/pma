@@ -41,7 +41,15 @@ const Sidebar = () => {
     let id = localStorage.getItem('id')
 
     try {
-      const res = await axios.get(`http://127.0.0.1:8000/task/?developer=${id}`)
+      const token = localStorage.getItem('userToken')
+      const res = await axios.get(
+        `http://127.0.0.1:8000/task/?developer=${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
       if (res.status === 200) {
         setTasks(res?.data)
