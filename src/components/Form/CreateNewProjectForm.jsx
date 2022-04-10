@@ -18,7 +18,6 @@ export default function CreateNewProjectForm() {
       })
 
       if (res.status === 201) {
-        alert('Project Created')
         Toast('success', 'Project created successfully!')
       }
     } catch (error) {

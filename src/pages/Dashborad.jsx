@@ -299,7 +299,6 @@ const Dashborad = () => {
                   )}
                 </Button>
               </div>
-              )
             </Tab>
           )}
           <Tab eventKey='Design' title='Design'>

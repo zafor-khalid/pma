@@ -10,3 +10,13 @@
     display: block;
   }
 }
+.username {
+  display: none;
+}
+.logout-btn:hover .username {
+  display: block !important;
+}
+
+.logout-btn:hover .logout {
+  display: none !important;
+}

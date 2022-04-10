@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { useAuth } from './contex/AuthContext';
 import './index.less';
+import AddNewDeveloper from './pages/AddNewDeveloper';
 import CreateNewProject from './pages/CreateNewProject';
 import Dashborad from './pages/Dashborad';
 import Login from './pages/Login';
@@ -28,6 +29,8 @@ function App() {
                 <Route path="/dashboard/:id" element={<Dashborad />} />
                 <Route path="/" element={<Navigate to="/dashboard/1" replace />} />
                 <Route path="/create" element={<CreateNewProject />} />
+                <Route path="/add-new-dev" element={<AddNewDeveloper />} />
+
               </>
             )
             :
@@ -40,9 +43,11 @@ function App() {
         }
         <Route path="*" element={<NotFound />} />
         <Route path="/out" element={<Login />} />
-        {/* <Route path="/dashboard" element={<Dashborad />} />
-        <Route path="/login" element={<Login />} /> */}
+
+
+
       </Routes>
+
     </>
   );
 }
