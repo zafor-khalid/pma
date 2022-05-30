@@ -13,15 +13,23 @@ const AddNewDeveloper = () => {
   async function postProject() {
     const newObj = {
       ...user,
+      password2: user.password,
+      email: 'admin@gmail.com',
+      first_name: 'dev',
+      last_name: 'dev',
       is_active: true,
       is_staff: true,
     }
 
     try {
       const token = localStorage.getItem('userToken')
-      const res = await axios.post('http://127.0.0.1:8000/user/', newObj, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      const res = await axios.post(
+        'http://127.0.0.1:8000/dev/register/',
+        newObj,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
 
       if (res.status === 201) {
         Toast('success', 'Developer created successfully!')
