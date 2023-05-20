@@ -18,9 +18,7 @@ const PageLayout = ({ children }) => {
         className='bg-primary w-100 text-center py-2'
         style={{ position: 'fixed', bottom: '0rem' }}
       >
-        <h6 className='text-white  m-0'>
-          Developed @ By Zafor, Sobuj, Shishir
-        </h6>
+        <h6 className='text-white  m-0'>Developed @ By Zafor & Shohan</h6>
         <h6 className='text-white  m-0'>
           Department of Computer Science & Engineering
         </h6>
